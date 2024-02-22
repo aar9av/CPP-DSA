@@ -1,18 +1,44 @@
 #include <bits/stdc++.h>
+#define int long long
+#define rep(i, a, b) for (int i = a; i < b; i++)
+#define it(x) x.begin(), x.end()
+#define endl char(10)
 using namespace std;
+int mod = 1e9 + 7;
 
-int main()
+void fastIO()
 {
-    int n, k;
-    cin >> n >> k;
-    vector<int> h(n + 1, 0);
-    for (int i = 0; i < n; i++)
-        cin >> h[i + 1];
-    vector<int> dp(n + 1, INT_MAX);
-    dp[0] = dp[1] = 0;
-    for (int i = 2; i <= n; i++)
-        for (int j = 1; j <= k; j++)
-            dp[i] = min(dp[i], dp[i - j] + abs(h[i] - h[i - j]));
-    cout << dp[n];
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
+int min_energy(vector<int> &heights, int max_jump, int idx, vector<int> &dp)
+{
+    if (idx == 0)
+        return 0;
+    if (dp[idx] != -1)
+        return dp[idx];
+    int res = INT_MAX;
+    for (int i = 1; i <= max_jump; ++i)
+        if (idx - i >= 0)
+            res = min(res, min_energy(heights, max_jump, idx - i, dp) + abs(heights[idx] - heights[idx - i]));
+    return dp[idx] = res;
+}
+
+int solve(vector<int> &heights, int max_jump)
+{
+    vector<int> dp(heights.size() + 1, -1);
+    return min_energy(heights, max_jump, heights.size() -1, dp);
+}
+
+main()
+{
+    fastIO();
+    int n, max_jump;
+    cin >> n >> max_jump;
+    vector<int> heights(n, 0);
+    for (int i = 0; i < n; ++i)
+        cin >> heights[i];
+    cout << solve(heights, max_jump);
     return 0;
 }

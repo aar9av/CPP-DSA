@@ -1,16 +1,37 @@
 #include <bits/stdc++.h>
+#define int long long
+#define rep(i, a, b) for (int i = a; i < b; i++)
+#define it(x) x.begin(), x.end()
+#define endl char(10)
 using namespace std;
+int mod = 1e9 + 7;
 
-int main()
+void fastIO()
 {
-    int mod = 1e9 + 7;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
+int count_ways(int n, vector<int> &dp)
+{
+    if (n <= 2)
+        return n;
+    if (dp[n] != -1)
+        return dp[n];
+    return dp[n] = (count_ways(n - 1, dp) + count_ways(n - 2, dp)) % mod;
+}
+
+int solve(int n)
+{
+    vector<int> dp(n + 1, -1);
+    return count_ways(n, dp);
+}
+
+main()
+{
+    fastIO();
     int n;
     cin >> n;
-    vector<int> dp(n + 1);
-    dp[1] = 1;
-    dp[2] = 2;
-    for (int i = 3; i <= n; i++)
-        dp[i] = (dp[i - 1] + dp[i - 2]) % mod;
-    cout << dp[n];
+    cout << solve(n);
     return 0;
 }
